@@ -25,7 +25,7 @@ class Connection(object):
     UNIX_PROTO = 'unix'
     INET_PROTO = 'inet'
     DEFAULT_TIMEOUT = 3
-    RETRY_INTERVAL = 30
+    RETRY_INTERVAL = 5
 
     def __init__(self, protocol, host, port=None, timeout=None):
         """
@@ -247,6 +247,8 @@ class HandlerSocket(threading.local):
                 if conn.is_ready():
                     conn.connect()
                     break
+                else:
+                    raise ConnectionError('Connection is not ready')
             except ConnectionError, e:
                 self.last_connection_exception = e
                 # In case indexed connection is forced remove it from the caches
